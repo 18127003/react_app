@@ -3,7 +3,7 @@ import React, {useState, useEffect, useRef} from "react"
 import { FaTrash } from "react-icons/fa"
 
 const TodoItem = (props)=>{
-    const apipath = "http://localhost:5500"
+    const apipath = "https://react-server.herokuapp.com/api"
     const [onEdit, setEditMode]=useState(false)
     const inputRef = useRef(null);
     const {completed, _id, title} = props.todo
