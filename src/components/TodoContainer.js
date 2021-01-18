@@ -9,7 +9,7 @@ import Navbar from "./Navbar";
 import { Route, Switch } from "react-router-dom"
 
 const TodoContainer = ()=> {
-  const apipath = "https://react-server.herokuapp.com"
+  const apipath = "http://localhost:5500"
 
   const [todos, setTodo]=useState([])
   useEffect(()=>{
