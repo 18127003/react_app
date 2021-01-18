@@ -15,11 +15,12 @@ const TodoContainer = ()=> {
     if (loadedTodos) {
       return loadedTodos
     } else {
-      (async ()=>{
-        let res = await fetch("https://jsonplaceholder.typicode.com/todos?_limit=10")
-        let todo = await res.json()
-        return todo
-      })()    
+      // (async ()=>{
+      //   let res = await fetch("https://jsonplaceholder.typicode.com/todos?_limit=10")
+      //   let todo = await res.json()
+      //   return todo
+      // })()  
+      return []  
     }
   }
   const [todos, setTodo]=useState(initTodos())
