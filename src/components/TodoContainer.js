@@ -9,26 +9,36 @@ import Navbar from "./Navbar";
 import { Route, Switch } from "react-router-dom"
 
 const TodoContainer = ()=> {
-  const initTodos = ()=>{
-    const temp = localStorage.getItem("todos")
-    const loadedTodos = JSON.parse(temp)
-    if (loadedTodos) {
-      return loadedTodos
-    } else {
-      // (async ()=>{
-      //   let res = await fetch("https://jsonplaceholder.typicode.com/todos?_limit=10")
-      //   let todo = await res.json()
-      //   return todo
-      // })()  
-      return []  
-    }
-  }
-  const [todos, setTodo]=useState(initTodos())
+  const apipath = "http://localhost:5500"
 
-  const onStatusClick=(id)=>{
+  const [todos, setTodo]=useState([])
+  useEffect(()=>{
+    const temp = localStorage.getItem("todos")
+    const loadedTodos = JSON.parse(temp)  
+    if (loadedTodos) {
+      setTodo(loadedTodos)
+    } else {
+      (async ()=>{
+        let res = await fetch(`${apipath}/getAll`)
+        let todo = await res.json()
+        setTodo(JSON.parse(todo.todos))
+      })()
+    }
+  },[])
+  const onStatusClick= async (id)=>{
+    await fetch(`${apipath}/updateTodo/${id}`,{
+      method:"PUT",
+      headers:{
+        "Accept":"application/x-www-form-urlencoded",
+        "Content-Type":"application/x-www-form-urlencoded"
+      },
+      body: new URLSearchParams({
+        completed: "true"
+      })
+    })
     setTodo(prevState => 
       prevState.map(todo => {
-        if (todo.id === id) {
+        if (todo._id === id) {
           return {
             ...todo,
             completed: !todo.completed,
@@ -38,19 +48,35 @@ const TodoContainer = ()=> {
       })
     )
   }
-  const onDeleteClick=(id)=>{
+  const onDeleteClick= async (id)=>{
+    await fetch(`${apipath}/removeTodo/${id}`,{
+      method:"DELETE",
+    })
     setTodo(
       [
         ...todos.filter(todo => {
-          return todo.id !== id;
+          return todo._id !== id;
         })
       ]
     );
   }
-  const addTodoItem=(item)=>{
+  const addTodoItem= async (item)=>{
+    let new_id = uuidv4()
+    await fetch(`${apipath}/saveTodo`,{
+      method:"POST",
+      headers:{
+        "Accept":"application/x-www-form-urlencoded",
+        "Content-Type":"application/x-www-form-urlencoded"
+      },
+      body: new URLSearchParams({
+        id: new_id,
+        title: item,
+        completed: false,
+      })
+    })
     setTodo(
       [...todos,{ 
-        id: uuidv4(),
+        _id: new_id,
         title: item,
         completed: false
       }]
@@ -59,7 +85,7 @@ const TodoContainer = ()=> {
   const updateItem=(newTitle, id)=>{
     setTodo(
       todos.map(todo => {
-        if (todo.id === id) {
+        if (todo._id === id) {
           todo.title = newTitle
         }
         return todo
