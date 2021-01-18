@@ -12,7 +12,7 @@ const TodoContainer = ()=> {
   const initTodos = ()=>{
     const temp = localStorage.getItem("todos")
     const loadedTodos = JSON.parse(temp)
-    if (loadedTodos.length>0) {
+    if (loadedTodos) {
       return loadedTodos
     } else {
       (async ()=>{
