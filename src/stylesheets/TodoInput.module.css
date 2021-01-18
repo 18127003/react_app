@@ -1,0 +1,10 @@
+
+#form_card{
+    border-radius: 7px;
+}
+#form_card:hover{
+    border-radius: 30px;
+}
+.input_text::placeholder{
+    color: teal;
+}
